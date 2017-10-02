@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>transaksi penjualan</title>
+</script>
+</head>
+<body>
+<table class="table">
+<form action="transaksi.php?op=send" method="POST" class="form-control">
+	<tr>
+	<td>Barcede</td><td><input type="text" name="barcode" class="form-control"></td>
+	</tr>
+	<tr>
+	<td>jumlah</td><td><input type="text" name="jumlah" class="form-control"></td>
+	</tr>
+	<tr>
+	<td> </td><td><input type="submit" name="submit" value="<<Tambah"></td>
+	</tr>
+</form>
+</table>
+<table class="table">
+<form name="hitung" action="penjualan.php" method="POST" class="form-control" id="fom1">
+	<tr>
+	<td>Sub Total (Rp)</td><td><input  type="text" name="sub_total" class="form-control" readonly="readonly" value="<?php
+	error_reporting(0); echo  
+	number_format($data['sub_total'],0,',','.');?>" id="val1" onkeyup="tambah()"" /></td>
+	</tr>
+	<tr>
+	<td>Diskon (Rp)</td><td><input type="text" name="diskon" class="form-control" id="tanpa-rupiah" /></td>
+	</tr>
+	<tr>
+	<td>Total (Rp)</td><td><input type="text" name="total" class="form-control" readonly="readonly" id="hasil" /></td>
+	</tr>
+	<tr>
+		<td>Bayar (Rp)</td><td><input type="text" name="bayar" class="form-control"></td>
+	</tr>
+	<tr>
+		<td>Kembali (Rp)</td><td><input type="text" name="bayar" class="form-control" readonly="readonly"></td>
+	</tr>
+	<tr>
+	<td> </td><td><input type="submit" name="submit" value="<<Tambah"></td>
+	</tr>
+</form>
+</table>
+<script type="text/javascript">
+
+	/* Tanpa Rupiah */
+	var tanpa_rupiah = document.getElementById('tanpa-rupiah');
+	tanpa_rupiah.addEventListener('keyup', function(e)
+	{
+		tanpa_rupiah.value = formatRupiah(this.value);
+	});
+	
+	tanpa_rupiah.addEventListener('keydown', function(event)
+	{
+		limitCharacter(event);
+	});
+	function formatRupiah(bilangan, prefix)
+	{
+		var number_string = bilangan.replace(/[^,\d]/g, '').toString(),
+			split	= number_string.split(','),
+			sisa 	= split[0].length % 3,
+			rupiah 	= split[0].substr(0, sisa),
+			ribuan 	= split[0].substr(sisa).match(/\d{1,3}/gi);
+			
+		if (ribuan) {
+			separator = sisa ? '.' : '';
+			rupiah += separator + ribuan.join('.');
+		}
+		
+		rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+		return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+	}
+	
+	function limitCharacter(event)
+	{
+		key = event.which || event.keyCode;
+		if ( key != 188 // Comma
+			 && key != 8 // Backspace
+			 && key != 17 && key != 86 & key != 67 // Ctrl c, ctrl v
+			 && (key < 48 || key > 57) // Non digit
+			 // Dan masih banyak lagi seperti tombol del, panah kiri dan kanan, tombol tab, dll
+			) 
+		{
+			event.preventDefault();
+			return false;
+		}
+	}
+	function hit()
+{
+var b1 = parseFloat (document.form.hitung.sub_total.value);
+var b2 = parseFloat (document.form.hitung.diskon.value);
+document.form.hitung.total.value = b1-b2;
+}
+</script>
+</body>
+</html>
